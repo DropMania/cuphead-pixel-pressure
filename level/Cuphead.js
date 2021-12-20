@@ -46,6 +46,9 @@ export default class Cuphead extends Body {
         })
         this.on('hit', this.gotHit)
         this.lifes = 3
+        this.scene.events.emit('lifeUpdate', {
+            lifes: this.lifes
+        })
         this.cooldown = false
     }
     gotHit() {
@@ -53,11 +56,12 @@ export default class Cuphead extends Body {
             this.cooldown = true
             this.scene.cameras.main.shake(100, 0.00008)
             this.lifes--
+            this.scene.events.emit('lifeUpdate', {
+                lifes: this.lifes
+            })
             if (this.lifes === 0) {
                 console.log('game over')
-                this.scene.scene.stop('Level')
-                this.scene.sound.stopAll()
-                this.scene.scene.resume('Overworld')
+                this.scene.events.emit('gameOver')
             }
             this.setTint(0xff0000)
             this.scene.time.addEvent({

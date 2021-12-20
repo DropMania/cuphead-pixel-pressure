@@ -131,7 +131,6 @@ export default class Grim extends Boss {
     }
     update() {
         super.update()
-        console.log(this.healthPercent, this.scene.cuphead.lifes)
         this.setVelocityX((this.cupheadIsRight ? -1 : 1) * this.speed)
         if (this.body.velocity.x > 0) {
             this.flipX = false

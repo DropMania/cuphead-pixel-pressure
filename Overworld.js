@@ -93,19 +93,8 @@ export default class Overworld extends Phaser.Scene {
         this.sound.play('music', {
             volume: 0.2
         })
-        this.pause = false
-        this.events.on('pause', () => {
-            this.cuphead.setVelocity(0, 0)
-            this.cuphead.play('idle-up', true)
-            this.pause = true
-        })
-        this.events.on('resume', () => {
-            this.pause = false
-        })
     }
     update() {
-        if (!this.pause) {
-            this.cuphead.update()
-        }
+        this.cuphead.update()
     }
 }

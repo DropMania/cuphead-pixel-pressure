@@ -83,7 +83,7 @@ export default class Level extends Phaser.Scene {
             this.map.widthInPixels,
             this.map.heightInPixels
         )
-        this.cuphead = new Cuphead(this, 100, 180, 'run', 0)
+        this.cuphead = new Cuphead(this, 100, 180, 'idle', 0)
         this.cameras.main.setZoom(5)
         this.cameras.main.startFollow(this.cuphead)
         this.cameras.main.setBounds(
@@ -122,14 +122,20 @@ export default class Level extends Phaser.Scene {
             0
         )
         this.keys.esc.on('down', () => {
-            //this.scene.launch('Overworld')
-            this.scene.stop('Level')
-            this.sound.stopAll()
-            this.scene.resume('Overworld')
+            this.events.emit('gameOver')
         })
         this.sound.stopAll()
         this.sound.play(`level_${this.level}_song`, {
             volume: 0.5
+        })
+        this.seconds = 0
+        this.countEvent = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                this.seconds++
+                this.events.emit('updateTime', this.seconds)
+            },
+            loop: true
         })
     }
 

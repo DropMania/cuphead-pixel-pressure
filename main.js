@@ -7,6 +7,8 @@ new Phaser.Game({
     width: window.innerWidth,
     height: window.innerHeight,
     pixelArt: true,
+    backgroundColor: '#000000',
+
     physics: {
         default: 'matter',
         matter: {
@@ -21,7 +23,10 @@ new Phaser.Game({
     },
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoRound: true,
+        width: 1920,
+        height: 950
     },
-    scene: [/* Intro, */ Overworld, Level, UIScene]
+    scene: [Intro, Overworld, Level, UIScene]
 })

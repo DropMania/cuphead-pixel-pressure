@@ -7,10 +7,17 @@ export default class Window extends Phaser.Physics.Matter.Image {
         this.scene = scene
         this.scene.add.existing(this)
         this.setOrigin(0.5, 0.5)
+        this.setScale(2)
+        this.info = this.scene.add.text(x - 150, y - 120, '*Space to Select', {
+            fontSize: '10px',
+            align: 'center',
+            fill: '#ffffff'
+        })
         this.title = this.scene.add
-            .text(x, y - 20, text, {
-                fontSize: '12px',
-                fill: '#fff'
+            .text(x, y - 50, text, {
+                fontSize: '24px',
+                fill: '#fff',
+                align: 'center'
             })
             .setOrigin(0.5, 0.5)
 
@@ -18,18 +25,13 @@ export default class Window extends Phaser.Physics.Matter.Image {
         this.cursor = 0
         buttons.forEach((button, i) => {
             this.buttons.push(
-                this.scene.add.text(
-                    this.x - this.width / 2 + i * 60 + 10,
-                    this.y + 20,
-                    button,
-                    {
-                        fontSize: '12px',
-                        fill: '#fff',
-                        align: 'center',
-                        strokeThickness: this.cursor === i ? 2 : 0,
-                        stroke: '#f00'
-                    }
-                )
+                this.scene.add.text(this.x - 40, this.y + i * 30 + 5, button, {
+                    fontSize: '18px',
+                    fill: '#fff',
+                    align: 'center',
+                    strokeThickness: 2,
+                    stroke: this.cursor === i ? '#f00' : '#000'
+                })
             )
         })
     }
@@ -48,6 +50,7 @@ export default class Window extends Phaser.Physics.Matter.Image {
     }
     delete() {
         this.title.destroy()
+        this.info.destroy()
         this.buttons.forEach((button) => button.destroy())
         this.destroy()
     }

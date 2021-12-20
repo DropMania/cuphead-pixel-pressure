@@ -25,10 +25,11 @@ export default class Boss extends Body {
         })
 
         if (this.health <= 0) {
-            console.log('win')
-            this.scene.scene.stop('Level')
-            this.scene.sound.stopAll()
-            this.scene.scene.resume('Overworld')
+            this.scene.events.emit('win', {
+                level: this.scene.level,
+                time: this.scene.seconds
+            })
+            this.scene.countEvent.destroy()
         }
     }
     update() {
