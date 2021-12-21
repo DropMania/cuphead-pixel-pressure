@@ -36,22 +36,21 @@ export default class UIScene extends Phaser.Scene {
             frameRate: 20,
             repeat: 0
         })
-
-        getLeaderboard('2').then(({ top, my }) => {
-            console.log(top, my)
-        })
         if (!localStorage.getItem('username')) {
             let username = prompt(
                 'Enter your username: \n (This will only be used for the leaderboard and is not required)'
             )
             localStorage.setItem('username', username)
         }
-        this.cameras.main.setSize(window.innerWidth, window.innerHeight)
+        this.cameras.main.setSize(
+            this.game.config.width,
+            this.game.config.height
+        )
         this.cameras.main.setViewport(
             0,
             0,
-            window.innerWidth,
-            window.innerHeight
+            this.game.config.width,
+            this.game.config.height
         )
         this.cameras.main.setZoom(2)
         this.cameras.main.setVisible(true)
@@ -60,6 +59,11 @@ export default class UIScene extends Phaser.Scene {
         this.window = null
         this.leaderboard = null
         this.finishedLevels = []
+        if (localStorage.getItem('finishedLevels')) {
+            this.finishedLevels = JSON.parse(
+                localStorage.getItem('finishedLevels')
+            )
+        }
         this.timeText = this.add.text(1350, 250, '00:00', {
             fontFamily: 'Arial',
             fontSize: '24px',
@@ -106,6 +110,12 @@ export default class UIScene extends Phaser.Scene {
                     }
                 }
             }
+            if (event.key === 'm' && event.ctrlKey) {
+                let username = prompt(
+                    'Enter your username: \n (This will only be used for the leaderboard and is not required)'
+                )
+                localStorage.setItem('username', username)
+            }
         })
 
         this.overworldScene.events.on('level', (level) => {
@@ -119,8 +129,8 @@ export default class UIScene extends Phaser.Scene {
 
             this.window = new Window(
                 this,
-                window.innerWidth / 2,
-                window.innerHeight / 2,
+                this.game.config.width / 2,
+                this.game.config.height / 2,
                 'window',
                 text,
                 buttons
@@ -143,8 +153,8 @@ export default class UIScene extends Phaser.Scene {
                         this.heartImg.visible = true
                         this.heartText.visible = true
                         let overlay = this.add.sprite(
-                            window.innerWidth / 2,
-                            window.innerHeight / 2,
+                            this.game.config.width / 2,
+                            this.game.config.height / 2,
                             'wallop',
                             0
                         )
@@ -169,8 +179,8 @@ export default class UIScene extends Phaser.Scene {
             this.scene.pause('Level')
             this.window = new Window(
                 this,
-                window.innerWidth / 2,
-                window.innerHeight / 2,
+                this.game.config.width / 2,
+                this.game.config.height / 2,
                 'window',
                 'Game Over',
                 ['Restart', 'Leaderboard', 'Cancel']
@@ -214,13 +224,17 @@ export default class UIScene extends Phaser.Scene {
         this.levelScene.events.on('win', ({ time, level }) => {
             if (!this.finishedLevels.includes(level)) {
                 this.finishedLevels.push(level)
+                localStorage.setItem(
+                    'finishedLevels',
+                    JSON.stringify(this.finishedLevels)
+                )
             }
             if (localStorage.getItem('username')) {
                 addEntry(level, time)
             }
             let overlay = this.add.sprite(
-                window.innerWidth / 2,
-                window.innerHeight / 2,
+                this.game.config.width / 2,
+                this.game.config.height / 2,
                 'victory',
                 0
             )
@@ -249,8 +263,8 @@ the leaderboard!`
                 }
                 this.window = new Window(
                     this,
-                    window.innerWidth / 2,
-                    window.innerHeight / 2,
+                    this.game.config.width / 2,
+                    this.game.config.height / 2,
                     'window',
                     text,
                     ['Again', 'Leaderboard', 'Exit']
@@ -309,15 +323,15 @@ the leaderboard!`
     }
     openLeaderboard(level) {
         this.leaderboard = this.add.image(
-            window.innerWidth / 2,
-            window.innerHeight / 2,
+            this.game.config.width / 2,
+            this.game.config.height / 2,
             'window',
             0
         )
         this.leaderboard.setScale(3)
         getLeaderboard(level).then(({ top }) => {
-            let text = 'Top 5 Times:\n\n'
-            for (let i = 0; i < 5; i++) {
+            let text = 'Top 10 Times:\n\n'
+            for (let i = 0; i < 10; i++) {
                 if (top[i]) {
                     text += `${i + 1}. ${top[i].name} - ${formatS(
                         top[i].time
@@ -327,8 +341,8 @@ the leaderboard!`
                 }
             }
             this.leaderboard.textBox = this.add.text(
-                window.innerWidth / 2,
-                window.innerHeight / 2,
+                this.game.config.width / 2,
+                this.game.config.height / 2,
                 text,
                 {
                     fontFamily: 'Arial',
@@ -338,7 +352,9 @@ the leaderboard!`
                 }
             )
             this.leaderboard.textBox.setOrigin(0.5)
-            this.leaderboard.textBox.setWordWrapWidth(window.innerWidth / 2)
+            this.leaderboard.textBox.setWordWrapWidth(
+                this.game.config.width / 2
+            )
         })
     }
 }

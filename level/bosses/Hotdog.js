@@ -37,8 +37,8 @@ export default class HotDog extends Boss {
         this.isJumping = false
         this.play('dance')
         this.setMass(0.1)
-        this.health = 30
-        this.maxHealth = 30
+        this.health = 25
+        this.maxHealth = 25
         this.hotdogburstEvent = this.scene.time.addEvent({
             delay: 1000,
             callback: this.hotdogburst,

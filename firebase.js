@@ -38,7 +38,7 @@ export async function getLeaderboard(level) {
         leaderboard,
         where('level', '==', level),
         orderBy('time', 'asc'),
-        limit(5)
+        limit(10)
     )
     let myQ = null
     if (localStorage.getItem('username')) {
